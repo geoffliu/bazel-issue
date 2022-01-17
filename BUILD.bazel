@@ -1,0 +1,28 @@
+load("@npm//webpack:index.bzl", "webpack")
+
+webpack(
+  name = "bundle",
+  output_dir = True,
+  args = [
+    "build",
+    "-o",
+    "$(@D)",
+  ],
+  data = [
+    ":src/index.js",
+    "@npm//:node_modules",
+  ],
+  env = {
+    'NODE_ENV': 'production'
+  },
+)
+
+sh_binary(
+  name = "upload",
+  srcs = ["script.sh"],
+  data = [":bundle"],
+  args = [
+    "$(locations :bundle)"
+  ]
+)
+
